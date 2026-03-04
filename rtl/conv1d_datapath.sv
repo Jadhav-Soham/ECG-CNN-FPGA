@@ -74,15 +74,18 @@ always_ff @(posedge clk) begin
     // MAC
     else if(mac_en) begin
         for(o=0;o<PAR_OUT;o++)
-            output_mem[grp_cnt*PAR_OUT+o][pos_cnt] <= (acc[o][DATA_WIDTH-1+8]) ? '0 : acc[o][DATA_WIDTH-1+8:8];          //ReLU taken care of + Q8.8
+            acc[o] <= acc[o] + (sample * weight_mem[grp_cnt*PAR_OUT+o][ch_cnt][tap_cnt]);
+    end
+
     end
 
     // WRITE OUTPUT
     else if(write_en) begin
         for(o=0;o<PAR_OUT;o++)
-            output_mem[grp_cnt*PAR_OUT+o][pos_cnt] <= (acc[o][ACC_WIDTH-1]) ? '0 : acc[o][DATA_WIDTH-1:0];          //ReLU taken care of 
+            output_mem[grp_cnt*PAR_OUT+o][pos_cnt] <= (acc[o][DATA_WIDTH-1+8]) ? '0 : acc[o][DATA_WIDTH-1+8:8];          //ReLU taken care of + Q8.8
     end
 end
 
 
 endmodule
+
