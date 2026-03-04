@@ -68,13 +68,13 @@ always_ff @(posedge clk) begin
     // LOAD BIAS
     if(load_bias) begin
         for(o=0;o<PAR_OUT;o++)
-            acc[o] <= bias_mem[grp_cnt*PAR_OUT+o];
+            acc[o] <= {{8{bias_mem[grp_cnt*PAR_OUT+o][DATA_WIDTH-1]}}, bias_mem[grp_cnt*PAR_OUT+o], 8'b0};          //Sign extension + Q8.8
     end
 
     // MAC
     else if(mac_en) begin
         for(o=0;o<PAR_OUT;o++)
-            acc[o] <= acc[o] + (sample * weight_mem[grp_cnt*PAR_OUT+o][ch_cnt][tap_cnt]);
+            output_mem[grp_cnt*PAR_OUT+o][pos_cnt] <= (acc[o][DATA_WIDTH-1+8]) ? '0 : acc[o][DATA_WIDTH-1+8:8];          //ReLU taken care of + Q8.8
     end
 
     // WRITE OUTPUT
@@ -83,5 +83,6 @@ always_ff @(posedge clk) begin
             output_mem[grp_cnt*PAR_OUT+o][pos_cnt] <= (acc[o][ACC_WIDTH-1]) ? '0 : acc[o][DATA_WIDTH-1:0];          //ReLU taken care of 
     end
 end
+
 
 endmodule
