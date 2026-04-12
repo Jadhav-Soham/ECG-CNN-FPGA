@@ -25,3 +25,12 @@ SystemVerilog (hand-coded RTL)
 Application Domain
 Healthcare signal processing – ECG arrhythmia classification using FPGA acceleration.
 
+
+## CNN Model Training
+The CNN model used for this ECG classifier was trained separately.
+
+Training code and model generation are available here:
+https://github.com/Viraj281105/ecg_fpga_accelerator
+
+This repository focuses on the FPGA accelerator implementation.
+
